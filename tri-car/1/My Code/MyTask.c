@@ -32,9 +32,9 @@ void Task_Creat()
 	);
 }
 /** 
-  * LED0亮代表处于PC虚拟串口模式 
+  * LED0亮代表处于遥控器模式 
   * LED1亮代表处于紧急制动模式
-  * LED3亮代表处于遥控器断连状态
+  * LED2灭代表处于遥控器断连状态
   *
   **/
 void Motor_Task(void const *argument)
@@ -44,18 +44,20 @@ void Motor_Task(void const *argument)
 		
 	 if(RemoteData.Key.Left_Key_Up)
 	 {
+		  HAL_Delay(150);
 			switch(a)
 		{
-			case 0:while(RemoteData.Key.Left_Key_Up);flag = 1;a++;HAL_GPIO_WritePin(GPIOC, LED0_Pin,GPIO_PIN_RESET);break;
-			case 1:while(RemoteData.Key.Left_Key_Up);flag = 0;a--;HAL_GPIO_WritePin(GPIOC, LED0_Pin,GPIO_PIN_SET);break;
+			case 0:flag = 1;a++;HAL_GPIO_WritePin(GPIOC, LED0_Pin,GPIO_PIN_RESET);break;
+			case 1:flag = 0;a--;HAL_GPIO_WritePin(GPIOC, LED0_Pin,GPIO_PIN_SET);break;
 		}
 	 }
 	 if(RemoteData.Key.Left_Key_Down)
 	 {
+		 HAL_Delay(150);
 			switch(b)
 		{
-			case 0:while(RemoteData.Key.Left_Key_Down);flag1 = 1;b++;HAL_GPIO_WritePin(GPIOC, LED1_Pin,GPIO_PIN_RESET);break;
-			case 1:while(RemoteData.Key.Left_Key_Down);flag1 = 0;b--;HAL_GPIO_WritePin(GPIOC, LED1_Pin,GPIO_PIN_SET);break;
+			case 0:flag1 = 1;b++;HAL_GPIO_WritePin(GPIOC, LED1_Pin,GPIO_PIN_RESET);break;
+			case 1:flag1 = 0;b--;HAL_GPIO_WritePin(GPIOC, LED1_Pin,GPIO_PIN_SET);break;
 		}
 		 
 	 }
