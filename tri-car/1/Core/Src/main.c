@@ -107,7 +107,7 @@ int main(void)
   __HAL_UART_ENABLE_IT(&huart4,UART_IT_IDLE);
 		HAL_UART_Receive_DMA(&huart4,usart4_dma_buff,sizeof usart4_dma_buff);
 		
-		WatchDog_Init(&Remote_dog,60);
+		WatchDog_Init(&Remote_dog,120);
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
