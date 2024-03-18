@@ -79,9 +79,9 @@ void Motor_Task(void const *argument)
 	 }
 		if(counter == 500)
 		{
-			MI.ExpVelocity = RAMP_self(0,MI.ExpVelocity,250);
-			MII.ExpVelocity = RAMP_self(0,MII.ExpVelocity,250); 
-			MIII.ExpVelocity = RAMP_self(0,MIII.ExpVelocity,250);
+			MI.ExpVelocity = RAMP_self(0,MI.ExpVelocity,1500);
+			MII.ExpVelocity = RAMP_self(0,MII.ExpVelocity,1500); 
+			MIII.ExpVelocity = RAMP_self(0,MIII.ExpVelocity,1500);
 			counter	= 0;	 
 		}
 	 
@@ -126,9 +126,9 @@ void VCOMM_CallBack(uint8_t fun_code, uint16_t id, uint8_t *data, uint8_t len)
 	
 	memcpy(&VCOMCOMM_Data, data, sizeof(Expect_Speed_Typedef));
 	
-	MI.ExpVelocity = 800 *(- VCOMCOMM_Data.Expect_Speed_X * 0.866 + VCOMCOMM_Data.Expect_Speed_Y * 0.5 + VCOMCOMM_Data.Expect_Speed_Yaw *0.25) ;
-	MII.ExpVelocity = 800 *( VCOMCOMM_Data.Expect_Speed_X * 0.866 + VCOMCOMM_Data.Expect_Speed_Y * 0.5 + VCOMCOMM_Data.Expect_Speed_Yaw * 0.25)  ;
-	MIII.ExpVelocity = 800 *(0 - VCOMCOMM_Data.Expect_Speed_Y * 0.5 + VCOMCOMM_Data.Expect_Speed_Yaw * 0.25) ;
+	MI.ExpVelocity = 800 * (VCOMCOMM_Data.Expect_Speed_X * 0.866 + VCOMCOMM_Data.Expect_Speed_Y * 0.5 + VCOMCOMM_Data.Expect_Speed_Yaw *0.25);
+	MII.ExpVelocity = 800 * (VCOMCOMM_Data.Expect_Speed_X * 0.866 - VCOMCOMM_Data.Expect_Speed_Y * 0.5 + VCOMCOMM_Data.Expect_Speed_Yaw * 0.25);
+	MIII.ExpVelocity = 800 * (0 + VCOMCOMM_Data.Expect_Speed_Y * 0.5 + VCOMCOMM_Data.Expect_Speed_Yaw * 0.25);
 	
 	 if(MI.ExpVelocity > 17000)
 	{
