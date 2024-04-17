@@ -5,7 +5,7 @@ extern UART_DataPack RemoteData;
 int flag = 1;
 int flag1 = 0;
 int a = 0,b = 0;
-int counter = 0;
+
 Expect_Speed_Typedef VCOMCOMM_Data;  
 
 RoboModule_Typedef MI,MII,MIII;
@@ -38,7 +38,6 @@ void Task_Creat()
   * LED2Ãð´ú±í´¦ÓÚÒ£¿ØÆ÷¶ÏÁ¬×´Ì¬
   *
   **/
-int32_t RAMP_self( int32_t final, int32_t now, int32_t ramp );
 
 void Motor_Task(void const *argument)
 {
@@ -47,7 +46,7 @@ void Motor_Task(void const *argument)
 	 
 	 if(RemoteData.Key.Left_Key_Up)
 	 {
-		  HAL_Delay(250);
+		   vTaskDelay(150);
 			switch(a)
 		{
 			case 0:flag = 1;a++;HAL_GPIO_WritePin(GPIOC, LED0_Pin,GPIO_PIN_RESET);break;
@@ -56,7 +55,7 @@ void Motor_Task(void const *argument)
 	 }
 	 if(RemoteData.Key.Left_Key_Down)
 	 {
-		 HAL_Delay(250);
+		  vTaskDelay(150);
 			switch(b)
 		{
 			case 0:flag1 = 1;b++;HAL_GPIO_WritePin(GPIOC, LED1_Pin,GPIO_PIN_RESET);break;
@@ -66,32 +65,22 @@ void Motor_Task(void const *argument)
 	 }
 	 if(flag)
 	 {
-	  MI.ExpVelocity = Remote_Control.Ey * 0.866 + Remote_Control.Ex * 0.5+ Remote_Control.Eangle * 0.5;
-		MII.ExpVelocity = - Remote_Control.Ey* 0.866 + Remote_Control.Ex * 0.5+ Remote_Control.Eangle * 0.5;
-		MIII.ExpVelocity = 0 - Remote_Control.Ex + Remote_Control.Eangle * 0.5;
-
+	  MI.ExpVelocity = 1.5 * (Remote_Control.Ey * 0.866025 + Remote_Control.Ex * 0.5+ Remote_Control.Eangle * 0.75);
+		MII.ExpVelocity = 1.5 * (- Remote_Control.Ey* 0.866025 + Remote_Control.Ex * 0.5+ Remote_Control.Eangle * 0.75);
+		MIII.ExpVelocity = 1.5 * (0 - Remote_Control.Ex + Remote_Control.Eangle * 0.75);
+		 
 	 }
-	 if(flag1)
+	
+	 if(flag1 != 1)
 	 {
-	  MI.ExpVelocity = 0;
-		MII.ExpVelocity = 0;
-		MIII.ExpVelocity = 0;
-	 }
-		if(counter == 500)
-		{
-			MI.ExpVelocity = RAMP_self(0,MI.ExpVelocity,1500);
-			MII.ExpVelocity = RAMP_self(0,MII.ExpVelocity,1500); 
-			MIII.ExpVelocity = RAMP_self(0,MIII.ExpVelocity,1500);
-			counter	= 0;	 
-		}
-	 
-		
+//	  MI.ExpVelocity = 0;
+//		MII.ExpVelocity = 0;
+//		MIII.ExpVelocity = 0;
 		CAN_RoboModule_DRV_Velocity_Mode(&hcan2,&MI);
 	  CAN_RoboModule_DRV_Velocity_Mode(&hcan2,&MII);
 	  CAN_RoboModule_DRV_Velocity_Mode(&hcan2,&MIII);
-		
-	  counter ++;
-	  vTaskDelay(10);
+	 }
+	  vTaskDelay(1);
 	 
   }
 }
@@ -125,55 +114,10 @@ void VCOMM_CallBack(uint8_t fun_code, uint16_t id, uint8_t *data, uint8_t len)
 {
 	
 	memcpy(&VCOMCOMM_Data, data, sizeof(Expect_Speed_Typedef));
-	
-	MI.ExpVelocity = 800 * (VCOMCOMM_Data.Expect_Speed_X * 0.866 + VCOMCOMM_Data.Expect_Speed_Y * 0.5 + VCOMCOMM_Data.Expect_Speed_Yaw *0.25);
-	MII.ExpVelocity = 800 * (VCOMCOMM_Data.Expect_Speed_X * 0.866 - VCOMCOMM_Data.Expect_Speed_Y * 0.5 + VCOMCOMM_Data.Expect_Speed_Yaw * 0.25);
-	MIII.ExpVelocity = 800 * (0 + VCOMCOMM_Data.Expect_Speed_Y * 0.5 + VCOMCOMM_Data.Expect_Speed_Yaw * 0.25);
-	
-	 if(MI.ExpVelocity > 17000)
-	{
-	 MI.ExpVelocity = 17000;
-	}
-		else if ( - MI.ExpVelocity > 17000)
-	{
-		MI.ExpVelocity = -17000;
-	}
-	 if(MII.ExpVelocity > 17000)
-	{
-	 MII.ExpVelocity = 17000;
-	}
-		else if ( - MII.ExpVelocity > 17000)
-	{
-		MII.ExpVelocity = -17000;
-	}
-	 if(MIII.ExpVelocity > 17000)
-	{
-	 MIII.ExpVelocity = 17000;
-	}
-		else if ( - MIII.ExpVelocity > 17000)
-	{
-		MIII.ExpVelocity = -17000;
+	if(flag == 0){
+	MI.ExpVelocity = 800 * (VCOMCOMM_Data.Expect_Speed_X * 0.866025 - VCOMCOMM_Data.Expect_Speed_Y * 0.5 - VCOMCOMM_Data.Expect_Speed_Yaw *0.25);
+	MII.ExpVelocity = 800 * (- VCOMCOMM_Data.Expect_Speed_X * 0.866025 - VCOMCOMM_Data.Expect_Speed_Y * 0.5 - VCOMCOMM_Data.Expect_Speed_Yaw * 0.25);
+	MIII.ExpVelocity = 800 * (0 + VCOMCOMM_Data.Expect_Speed_Y * 0.5 - VCOMCOMM_Data.Expect_Speed_Yaw * 0.25);
 	}
 	
-}
-
-int32_t RAMP_self( int32_t final, int32_t now, int32_t ramp ) //Ð±ÆÂº¯Êý
-{
-    float buffer = final - now;
-    
-    if (buffer > 0)
-    {
-        if (buffer > ramp)  
-                now += ramp;  
-        else
-                now += buffer;
-    }		
-    else
-    {
-        if (buffer < -ramp)
-                now += -ramp;
-        else
-                now += buffer;
-    }
-    return now;
 }

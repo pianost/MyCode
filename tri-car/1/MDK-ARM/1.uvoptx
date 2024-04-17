@@ -163,12 +163,12 @@
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Remote_Control</ItemText>
+          <ItemText>Remote_Control,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>MI</ItemText>
+          <ItemText>MI,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
@@ -184,6 +184,16 @@
           <count>5</count>
           <WinNumber>1</WinNumber>
           <ItemText>Remote_dog,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>\\1\../My Code/MyTask.c\MI.ExpCurrent</ItemText>
+        </Ww>
+        <Ww>
+          <count>7</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>usart4_dma_buff</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>
